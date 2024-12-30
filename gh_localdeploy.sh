@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-### ==============================================================================
-### SO HOW DO YOU PROCEED WITH YOUR SCRIPT?
-### 1. define the flags/options/parameters and defaults you need in Option:config()
-### 2. implement the different actions in Script:main() directly or with helper functions do_action1
-### 3. implement helper functions you defined in previous step
-### ==============================================================================
-
 ### Created by Peter Forret ( pforret ) on 2024-12-30
 ### Based on https://github.com/pforret/bashew 1.21.2
 script_version="0.0.1" # if there is a VERSION.md in this script's folder, that will have priority over this version number
@@ -15,28 +8,6 @@ readonly run_as_root=-1 # run_as_root: 0 = don't check anything / 1 = script MUS
 readonly script_description="automatic deploy on LAN/localhost upon 'github push'"
 
 function Option:config() {
-  ### Change the next lines to reflect which flags/options/parameters you need
-  ### flag:   switch a flag 'on' / no value specified
-  ###     flag|<short>|<long>|<description>
-  ###     e.g. "-v" or "--VERBOSE" for VERBOSE output / default is always 'off'
-  ###     will be available as $<long> in the script e.g. $VERBOSE
-  ### option: set an option / 1 value specified
-  ###     option|<short>|<long>|<description>|<default>
-  ###     e.g. "-e <extension>" or "--extension <extension>" for a file extension
-  ###     will be available a $<long> in the script e.g. $extension
-  ### list: add an list/array item / 1 value specified
-  ###     list|<short>|<long>|<description>| (default is ignored)
-  ###     e.g. "-u <user1> -u <user2>" or "--user <user1> --user <user2>"
-  ###     will be available a $<long> array in the script e.g. ${user[@]}
-  ### param:  comes after the options
-  ###     param|<type>|<long>|<description>
-  ###     <type> = 1 for single parameters - e.g. param|1|output expects 1 parameter <output>
-  ###     <type> = ? for optional parameters - e.g. param|1|output expects 1 parameter <output>
-  ###     <type> = n for list parameter    - e.g. param|n|inputs expects <input1> <input2> ... <input99>
-  ###     will be available as $<long> in the script after option/param parsing
-  ### choice:  is like a param, but when there are limited options
-  ###     choice|<type>|<long>|<description>|choice1,choice2,...
-  ###     <type> = 1 for single parameters - e.g. param|1|output expects 1 parameter <output>
   grep <<<"
 #commented lines will be filtered
 flag|h|help|show usage
@@ -45,8 +16,9 @@ flag|V|VERBOSE|also show debug messages
 flag|f|FORCE|do not ask for confirmation (always yes)
 option|L|LOG_DIR|folder for log files |$HOME/log/$script_prefix
 option|T|TMP_DIR|folder for temp files|/tmp/$script_prefix
-#option|W|WIDTH|width of the picture|800
-choice|1|action|action to perform|action1,action2,check,env,update
+option|P|PORT|deployment server will run on local port|8008
+option|H|HOOKS|webhook config file|./$script_prefix.yaml
+choice|1|action|action to perform|init,serve,check,env,update
 param|?|input|input file/text
 " -v -e '^#' -e '^\s*$'
 }
@@ -61,16 +33,29 @@ function Script:main() {
   Os:require "awk"
 
   case "${action,,}" in
-  action1)
-    #TIP: use «$script_prefix action1» to ...
-    #TIP:> $script_prefix action1
-    do_action1
+  init)
+    #TIP: use «$script_prefix init» to ...
+    #TIP:> $script_prefix init
+    IO:announce "test if ngrok is installed"
+    Os:require ngrok
+    ngrok config check || IO:die "Follow instructions on https://dashboard.ngrok.com/get-started/your-authtoken to create config file"
+    IO:announce "test if webhook is installed"
+    Os:require webhook
+    if [[ ! -f "$HOOKS" ]] ; then
+      IO:announce "Creating '$HOOKS' config file for adnanh/webhook"
+      folder="$(pwd)"
+      (
+        echo "- id: upon-github-push"
+        echo "  execute-command: \"$folder/redeploy.sh\""
+        echo "  command-working-directory: \"$folder\""
+      ) > "$HOOKS"
+    fi
     ;;
 
-  action2)
-    #TIP: use «$script_prefix action2» to ...
-    #TIP:> $script_prefix action2
-    do_action2
+  serve)
+    #TIP: use «$script_prefix serve» to ...
+    #TIP:> $script_prefix serve
+    do_serve
     ;;
 
   action3)
@@ -109,8 +94,8 @@ function Script:main() {
 ## Put your helper scripts here
 #####################################################################
 
-function do_action1() {
-  IO:log "action1"
+function do_init() {
+  IO:log "init"
   # Examples of required binaries/scripts and how to install them
   # Os:require "ffmpeg"
   # Os:require "convert" "imagemagick"
@@ -118,8 +103,8 @@ function do_action1() {
   # (code)
 }
 
-function do_action2() {
-  IO:log "action2"
+function do_serve() {
+  IO:log "serve"
   # (code)
 
 }

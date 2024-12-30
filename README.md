@@ -8,14 +8,14 @@
 
 # gh_localdeploy
 
-automatic deploy on LAN/localhost upon 'github push[D[D[D[D[D
+automatic deploy on LAN/localhost upon `github push`, using ngrok and webhook
 
 ## 🔥 Usage
 
 ```
 Program : gh_localdeploy  by peter@forret.com
 Version : v0.0.1 (Apr 22 16:07:13 2023)
-Purpose : automatic deploy on LAN/localhost upon 'github push[D[D[D[D[D
+Purpose : automatic deploy on LAN/localhost upon 'github push'
 Usage   : gh_localdeploy [-h] [-q] [-v] [-f] [-l <log_dir>] [-t <tmp_dir>] <action>
 Flags, options and parameters:
     -h|--help        : [flag] show usage [default: off]
@@ -61,8 +61,27 @@ or with `git`
 	$ git clone https://github.com/pforret/gh_localdeploy.git
 	$ cd gh_localdeploy
 
+The following programs are also required:
+
+### [ngrok](https://ngrok.com/) (free):
+
+* create a free account on [dashboard.ngrok.com](https://dashboard.ngrok.com/) - this includes 2 free endpoints (e.g. 1 for development/testing and 1 for production)
+* install Linux client: [Setup & Installation](https://dashboard.ngrok.com/get-started/setup/linux)
+```bash
+curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
+&& echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list \
+&& sudo apt update && sudo apt install ngrok
+```
+
+### [adnanh/webhook](https://github.com/adnanh/webhook) (Golang - open-source)
+
+```bash
+sudo apt-get install webhook
+```
+
 ## 📝 Acknowledgements
 
 * script created with [bashew](https://github.com/pforret/bashew)
+* [ngrok: GitHub Repository Webhooks](https://ngrok.com/docs/integrations/github/webhooks/)
 
 &copy; 2024 Peter Forret

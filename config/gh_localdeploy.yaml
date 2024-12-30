@@ -1,0 +1,3 @@
+- id: github-push
+  execute-command: "/var/scripts/redeploy.sh"
+  command-working-directory: "/var/webhook"
