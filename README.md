@@ -14,23 +14,28 @@ automatic deploy on LAN/localhost upon `github push`, using ngrok and webhook
 
 ```
 Program : gh_localdeploy  by peter@forret.com
-Version : v0.0.1 (Apr 22 16:07:13 2023)
+Version : v0.0.2 (2024-12-30 16:49)
 Purpose : automatic deploy on LAN/localhost upon 'github push'
-Usage   : gh_localdeploy [-h] [-q] [-v] [-f] [-l <log_dir>] [-t <tmp_dir>] <action>
+Usage   : gh_localdeploy [-h] [-Q] [-V] [-f] [-L <LOG_DIR>] [-T <TMP_DIR>] [-P <PORT>] [-H <HOOKS>] <action> <input?>
 Flags, options and parameters:
     -h|--help        : [flag] show usage [default: off]
-    -q|--quiet       : [flag] no output [default: off]
-    -v|--verbose     : [flag] also show debug messages [default: off]
-    -f|--force       : [flag] do not ask for confirmation (always yes) [default: off]
-    -l|--log_dir <?> : [option] folder for log files   [default: /Users/pforret/log/script]
-    -t|--tmp_dir <?> : [option] folder for temp files  [default: /tmp/script]
-    <action>         : [choice] action to perform  [options: action1,action2,check,env,update]
-                                  
+    -Q|--QUIET       : [flag] no output [default: off]
+    -V|--VERBOSE     : [flag] also show debug messages [default: off]
+    -f|--FORCE       : [flag] do not ask for confirmation (always yes) [default: off]
+    -L|--LOG_DIR <?> : [option] folder for log files   [default: /home/pforret/log/gh_localdeploy]
+    -T|--TMP_DIR <?> : [option] folder for temp files  [default: /tmp/gh_localdeploy]
+    -P|--PORT <?>    : [option] deployment server will run on local port  [default: 8008]
+    -H|--HOOKS <?>   : [option] webhook config file  [default: ./gh_localdeploy.yaml]
+    <action>         : [choice] action to perform  [options: init,serve,check,env,update]
+    <input>          : [parameter] input file/text (optional)
+                                                                                                                                                                                                                                                                                                                                                                 
 ### TIPS & EXAMPLES
-* use gh_localdeploy action1 to ...
-  gh_localdeploy action1
-* use gh_localdeploy action2 to ...
-  gh_localdeploy action2
+* use gh_localdeploy init to help and check the installation dependent tools
+  gh_localdeploy init
+* use gh_localdeploy serve to ...
+  gh_localdeploy serve
+* use gh_localdeploy action3 to ...
+  gh_localdeploy action3
 * use gh_localdeploy check to check if this script is ready to execute and what values the options/flags are
   gh_localdeploy check
 * use gh_localdeploy env to generate an example .env file

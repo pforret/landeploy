@@ -4,3 +4,5 @@ log
 .env
 .idea
 vendor
+/gh_localdeploy.yaml
+/redeploy.sh

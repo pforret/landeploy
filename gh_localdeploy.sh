@@ -14,12 +14,17 @@ flag|h|help|show usage
 flag|Q|QUIET|no output
 flag|V|VERBOSE|also show debug messages
 flag|f|FORCE|do not ask for confirmation (always yes)
-option|L|LOG_DIR|folder for log files |$HOME/log/$script_prefix
-option|T|TMP_DIR|folder for temp files|/tmp/$script_prefix
-option|P|PORT|deployment server will run on local port|8008
-option|H|HOOKS|webhook config file|./$script_prefix.yaml
+option|L|LOG_DIR|folder for log files |log/$script_prefix
+option|T|TMP_DIR|folder for temp files|.tmp
+option|B|BRANCH|remote repo branch|main
+option|D|DOMAIN|ngrok domain to use|
+option|E|ENVIRONMENT|deployment type (only php for now)|php
+option|H|HOOKS|webhook config file|$script_prefix.yaml
+option|P|PORT|local port for ngrok service|8008
+option|R|REMOTE|remote repo name|origin
+option|Y|REDEPLOY|deploy script file|redeploy.sh
 choice|1|action|action to perform|init,serve,check,env,update
-param|?|input|input file/text
+#param|?|input|input file/text
 " -v -e '^#' -e '^\s*$'
 }
 
@@ -34,28 +39,62 @@ function Script:main() {
 
   case "${action,,}" in
   init)
-    #TIP: use «$script_prefix init» to ...
+    #TIP: use «$script_prefix init» to do/check the installation of ngrok and webhook
     #TIP:> $script_prefix init
-    IO:announce "test if ngrok is installed"
-    Os:require ngrok
-    ngrok config check || IO:die "Follow instructions on https://dashboard.ngrok.com/get-started/your-authtoken to create config file"
-    IO:announce "test if webhook is installed"
-    Os:require webhook
+    Os:require git
+    check_ngrok 1
+    check_webhook 1
+
     if [[ ! -f "$HOOKS" ]] ; then
       IO:announce "Creating '$HOOKS' config file for adnanh/webhook"
-      folder="$(pwd)"
-      (
-        echo "- id: upon-github-push"
-        echo "  execute-command: \"$folder/redeploy.sh\""
-        echo "  command-working-directory: \"$folder\""
-      ) > "$HOOKS"
+      create_hooks_file > "$HOOKS"
     fi
+    [[ ! -f "$HOOKS" ]]  && IO:die "Could not create file '$HOOKS'"
+    IO:success "Found config: $HOOKS"
+
+    if [[ ! -f "$REDEPLOY" ]] ; then
+      IO:announce "Creating '$REDEPLOY' script file for redeployment"
+      create_template_deployer > "$REDEPLOY"
+      chmod +x "$REDEPLOY"
+    fi
+    [[ ! -f "$REDEPLOY" ]]  && IO:die "Could not create file '$REDEPLOY'"
+    IO:success "Found config: $REDEPLOY"
     ;;
 
   serve)
     #TIP: use «$script_prefix serve» to ...
     #TIP:> $script_prefix serve
-    do_serve
+    # start local webhook server on port $PORT
+    check_webhook
+    check_ngrok
+
+    [[ ! -f "$HOOKS" ]]  && IO:die "No file '$HOOKS' - run '$script_prefix init' first"
+    [[ ! -f "$REDEPLOY" ]]  && IO:die "No file '$REDEPLOY' - run '$script_prefix init' first"
+    trap 'pkill --signal SIGTERM --parent $$' EXIT
+
+    IO:announce "Starting webhook server on port $PORT"
+    IO:log "Start local server (webhook) and remote tunnel (ngrok)"
+    local name
+    < $HOOKS grep "id:" \
+    | cut -d: -f2 \
+    | xargs \
+    | while read -r name ; do
+        IO:print "Local : http://localhost:$PORT/hooks/$name"
+        [[ -n "$DOMAIN" ]] && IO:print "Remote: https://$DOMAIN/hooks/$name (use this as webhook in GitHub/BitBucket)"
+      done
+    local TODAY
+    TODAY=$(date '+%Y-%m-%d')
+    {
+      webhook -hooks "$HOOKS" -port "$PORT" -verbose &>> "$LOG_DIR/webhook.$TODAY.log"
+    } &
+    {
+      if [[ -n "$DOMAIN" ]] ; then
+        ngrok http http://localhost:$PORT --url=$DOMAIN &>> "$LOG_DIR/ngrok.$TODAY.log"
+      else
+        ngrok http http://localhost:$PORT &>> "$LOG_DIR/ngrok.$TODAY.log"
+      fi
+    } &
+    wait
     ;;
 
   action3)
@@ -94,19 +133,74 @@ function Script:main() {
 ## Put your helper scripts here
 #####################################################################
 
-function do_init() {
-  IO:log "init"
-  # Examples of required binaries/scripts and how to install them
-  # Os:require "ffmpeg"
-  # Os:require "convert" "imagemagick"
-  # Os:require "IO:progressbar" "basher install pforret/IO:progressbar"
-  # (code)
+function check_ngrok() {
+  local verbose=${1:-}
+  [[ -n "$verbose" ]] && IO:progress "check if 'ngrok' is installed"
+  if [[ -z $(command -v ngrok) ]] ; then
+    [[ "$FORCE" -lt 1 ]] && IO:die "ngrok is not installed - use --FORCE to install it automatically"
+    install_ngrok
+  fi
+  [[ -n "$verbose" ]] && IO:success "Found binary: $(command -v ngrok)"
+  ngrok config check > /dev/null || IO:die "first run 'ngrok config add-authtoken <key>' - find key on https://dashboard.ngrok.com/get-started/your-authtoken"
+  [[ -n "$verbose" ]] && IO:success "Found config: $(ngrok config check)"
 }
 
-function do_serve() {
-  IO:log "serve"
-  # (code)
+function check_webhook() {
+  local verbose=${1:-}
+  [[ -n "$verbose" ]] && IO:progress "check if webhook is installed"
+  if [[ -z $(command -v webhook) ]] ; then
+    [[ "$FORCE" -lt 1 ]] && IO:die "webhook is not installed - use --FORCE to install it automatically"
+    install_webhook
+  fi
+  [[ -n "$verbose" ]] && IO:success "Found binary: $(command -v webhook)"
+}
 
+function install_ngrok() {
+  IO:announce "Installing ngrok for Linux; you will need to give a sudo password"
+  curl -sSL "https://ngrok-agent.s3.amazonaws.com/ngrok.asc"       | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
+  && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list \
+  && sudo apt update \
+  && sudo apt install ngrok
+  [[ -z $(command -v ngrok) ]] && IO:die "Follow instructions on https://dashboard.ngrok.com/get-started/setup/linux to install ngrok - automatic install didn't work"
+}
+
+function install_webhook() {
+  IO:announce "Installing adnanh/webhook for Linux; you will need to give a sudo password"
+  sudo apt install webhook
+  [[ -z $(command -v webhook) ]] && IO:die "Follow instructions on https://github.com/adnanh/webhook#installation to install webhook - automatic install didn't work"
+}
+
+function create_template_deployer() {
+  local folder
+  folder="$(pwd)"
+  case $ENVIRONMENT in
+  php)
+    echo "#!/usr/bin/env bash"
+    echo "## automatically generated by $script_prefix $script_version"
+    echo "cd '$folder'"
+    echo "git pull $REMOTE $BRANCH"
+    echo "# PHP redeployment"
+    echo "PHP_BIN=$(command -v php)  # change this to a specific version if necessary"
+    echo "COMPOSER_BIN=$(command -v composer)  # change this to a specific version if necessary"
+    echo "[[ -f composer.lock ]] && \$PHP_BIN \$COMPOSER_BIN install --no-interaction --prefer-dist --optimize-autoloader"
+    echo "[[ -f artisan ]]       && \$PHP_BIN artisan migrate --force"
+    ;;
+  *)
+    echo "#!/usr/bin/env bash"
+    echo "## automatically generated by $script_prefix $script_version"
+    echo "cd '$folder'"
+    echo "git pull $REMOTE $BRANCH"
+    ;;
+  esac
+
+}
+
+function create_hooks_file() {
+    local folder
+    folder="$(pwd)"
+    echo "- id: redeploy"
+    echo "  command-working-directory: \"$folder\""
+    echo "  execute-command: \"$folder/$REDEPLOY\""
 }
 
 #####################################################################

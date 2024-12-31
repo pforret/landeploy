@@ -1,0 +1,95 @@
+ngrok - tunnel local ports to public URLs and inspect traffic
+
+USAGE:
+  ngrok [command] [flags]
+
+COMMANDS: 
+  config          update or migrate ngrok's configuration file
+  http            start an HTTP tunnel
+  tcp             start a TCP tunnel
+  tunnel          start a tunnel for use with a tunnel-group backend
+
+EXAMPLES: 
+  ngrok http 80                                                 # secure public URL for port 80 web server
+  ngrok http --url baz.ngrok.dev 8080                           # port 8080 available at baz.ngrok.dev
+  ngrok tcp 22                                                  # tunnel arbitrary TCP traffic to port 22
+  ngrok http 80 --oauth=google --oauth-allow-email=foo@foo.com  # secure your app with oauth
+
+Flags:
+  -h, --help      help for ngrok
+
+Use "ngrok [command] --help" for more information about a command.
+---------------------------------------------------------------------------------------
+NAME:
+  http - start an HTTP tunnel
+
+USAGE:
+  ngrok http [address:port | port] [flags]
+
+DESCRIPTION: 
+  Starts a tunnel listening for HTTP/HTTPS traffic with a specific hostname.
+  The HTTP Host header on incoming public requests is inspected to
+  determine which tunnel it matches.
+
+  HTTPS endpoints terminate TLS traffic at the ngrok server using the
+  appropriate certificates. The decrypted, HTTP traffic is then forwarded
+  through the secure tunnel and then to your local server. If you don't want
+  your TLS traffic to terminate at the ngrok server, use a TLS or TCP tunnel.
+
+TERMS OF SERVICE: https://ngrok.com/tos
+
+EXAMPLES: 
+  ngrok http 8080                             # forward ngrok subdomain to port 80
+  ngrok http example.com:9000                 # forward traffic to example.com:9000
+  ngrok http --url=bar.ngrok.dev 80           # request url name: 'bar.ngrok.dev'
+  ngrok http --url=example.com 1234           # request endpoint 'example.com' (DNS CNAME)
+  ngrok http --basic-auth='falken:joshua' 80  # enforce basic auth on tunnel endpoint
+  ngrok http --host-header=example.com 80     # rewrite the Host header to 'example.com'
+  ngrok http file:///var/log                  # serve local files in /var/log
+  ngrok http https://localhost:8443           # forward to a local https server
+
+OPTIONS:
+      --authtoken string                 ngrok.com authtoken identifying a user
+      --basic-auth strings               enforce basic auth on tunnel endpoint, 'user:password'
+      --binding strings                  ingress binding for an agent endpoint
+      --cidr-allow strings               reject connections that do not match the given CIDRs
+      --cidr-deny strings                reject connections that match the given CIDRs
+      --circuit-breaker float            reject requests when 5XX responses exceed this ratio
+      --compression                      gzip compress http responses from your web service
+      --config strings                   path to config files; they are merged if multiple
+      --description string               user editable description about this endpoint
+      --domain string                    host tunnel on a custom subdomain or hostname (requires DNS CNAME)
+  -h, --help                             help for http
+      --host-header string               set Host header; if 'rewrite' use local address hostname
+      --inspect                          enable/disable http introspection (default true)
+      --log string                       path to log file, 'stdout', 'stderr' or 'false' (default "false")
+      --log-format string                log record format: 'term', 'logfmt', 'json' (default "term")
+      --log-level string                 logging level: 'debug', 'info', 'warn', 'error', 'crit' (default "info")
+      --metadata string                  metadata about this endpoint
+      --mutual-tls-cas string            path to TLS certificate authority to verify client certs in mutual tls
+      --name string                      user supplied name for this endpoint
+      --oauth string                     enforce authentication oauth provider on tunnel endpoint, e.g. 'google'
+      --oauth-allow-domain strings       allow only oauth users with these email domains
+      --oauth-allow-email strings        allow only oauth users with these emails
+      --oauth-client-id string           oauth app client id, optional
+      --oauth-client-secret string       oauth app client secret, optional
+      --oauth-scope strings              request these oauth scopes when users authenticate
+      --oidc string                      oidc issuer url, e.g. https://accounts.google.com
+      --oidc-client-id string            oidc app client id
+      --oidc-client-secret string        oidc app client secret
+      --oidc-scope strings               request these oidc scopes when users authenticate
+      --request-header-add strings       header key:value to add to request
+      --request-header-remove strings    header field to remove from request if present
+      --response-header-add strings      header key:value to add to response
+      --response-header-remove strings   header field to remove from response if present
+      --traffic-policy-file string       path to traffic policy configuration YAML or JSON file, e.g. './path/to/policy.yml'
+      --ua-filter-allow strings          a list of regular expressions for user-agents to allow
+      --ua-filter-deny strings           a list of regular expressions for user-agents to deny
+      --upstream-protocol string         Specify the upstream protocol to be used: 'http1', 'http2' (default 'http1')
+      --upstream-proxy-protocol string   version of proxy proto to use with this tunnel, empty if not unused
+      --upstream-tls-verify              enables TLS verification of server TLS certificates
+      --upstream-tls-verify-cas string   path to CA cert to use to verify server certs
+      --url string                       host endpoint on a URL
+      --verify-webhook string            validate webhooks are signed by this provider, e.g. 'slack'
+      --verify-webhook-secret string     secret used by provider to sign webhooks, if any
+      --websocket-tcp-converter          convert ingress websocket connections to TCP upstream
