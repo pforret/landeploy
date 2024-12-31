@@ -22,6 +22,6 @@ test_no_parameters_shows_usage() {
 
 test_usage_shows_option_verbose() {
   # script without parameters should show option -v or --verbose
-  assert_equals 1 "$("$root_script" 2>&1 | grep -i -c "Usage")"
+  assert_equals 2 "$("$root_script" 2>&1 | grep -i -c "Usage")"
   assert_equals 1 "$("$root_script" 2>&1 | grep -i -c "verbose")"
 }
