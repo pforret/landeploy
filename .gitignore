@@ -6,3 +6,4 @@ log
 vendor
 /gh_localdeploy.yaml
 /redeploy.sh
+*.env
