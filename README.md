@@ -1,12 +1,12 @@
-![bash_unit CI](https://github.com/pforret/gh_localdeploy/workflows/bash_unit%20CI/badge.svg)
-![Shellcheck CI](https://github.com/pforret/gh_localdeploy/workflows/Shellcheck%20CI/badge.svg)
-![GH Language](https://img.shields.io/github/languages/top/pforret/gh_localdeploy)
-![GH stars](https://img.shields.io/github/stars/pforret/gh_localdeploy)
-![GH tag](https://img.shields.io/github/v/tag/pforret/gh_localdeploy)
-![GH License](https://img.shields.io/github/license/pforret/gh_localdeploy)
+![bash_unit CI](https://github.com/pforret/landeploy/workflows/bash_unit%20CI/badge.svg)
+![Shellcheck CI](https://github.com/pforret/landeploy/workflows/Shellcheck%20CI/badge.svg)
+![GH Language](https://img.shields.io/github/languages/top/pforret/landeploy)
+![GH stars](https://img.shields.io/github/stars/pforret/landeploy)
+![GH tag](https://img.shields.io/github/v/tag/pforret/landeploy)
+![GH License](https://img.shields.io/github/license/pforret/landeploy)
 [![basher install](https://img.shields.io/badge/basher-install-white?logo=gnu-bash&style=flat)](https://www.basher.it/package/)
 
-# gh_localdeploy
+# landeploy
 
 automatic deploy on LAN/localhost upon `github push`, using ngrok and webhook
 
@@ -51,29 +51,42 @@ Flags, options and parameters:
 ## ⚡️ Examples
 
 ```bash
-> gh_localdeploy -h 
-# get extended usage info
-> gh_localdeploy env > .env
-# create a .env file with default values
+> landeploy --FORCE init
+# install ngrok and webhook binaries, create config files
+
+> landeploy init
+# check if ngrok, webhook and all config files are OK
+✅  Found binary: /usr/local/bin/ngrok                                                                                                                                                                                                                                                                                                                           
+✅  Found config: Valid configuration file at /home/pforret/.config/ngrok/ngrok.yml
+✅  Found binary: /usr/bin/webhook
+✅  Found config: landeploy.yaml
+✅  Found config: redeploy.sh
+
+> landeploy serve
+# start local webhook and remote ngrok tunnel
+⏳  Starting webhook server on port 8008
+Local : http://localhost:8008/hooks/redeploy
+Remote: https://[customdomain].ngrok-free.app/hooks/redeploy (use this as webhook in GitHub/BitBucket)
+Admin : http://localhost:4040 (use this to check what is received by ngrok)
 ```
 
 ## 🚀 Installation
 
 with [basher](https://github.com/basherpm/basher)
 
-	$ basher install pforret/gh_localdeploy
+	$ basher install pforret/landeploy
 
 or with `git`
 
-	$ git clone https://github.com/pforret/gh_localdeploy.git
-	$ cd gh_localdeploy
+	$ git clone https://github.com/pforret/landeploy.git
+	$ cd landeploy
 
 The following programs are also required:
 
 ### [ngrok](https://ngrok.com/) (free):
 
 * create a free account on [dashboard.ngrok.com](https://dashboard.ngrok.com/) - this includes 2 free endpoints (e.g. 1 for development/testing and 1 for production)
-* install Linux client: [Setup & Installation](https://dashboard.ngrok.com/get-started/setup/linux)
+* install Linux client: [Setup & Installation](https://dashboard.ngrok.com/get-started/setup/linux) -- will happen automatically when using `landeploy --FORCE init`
 ```bash
 curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
 && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list \
