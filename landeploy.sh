@@ -85,6 +85,7 @@ function Script:main() {
     local TODAY
     TODAY=$(date '+%Y-%m-%d')
     {
+      IO:print "Admin : http://localhost:4040 (use this to check what is received by ngrok)"
       webhook -hooks "$HOOKS" -port "$PORT" -verbose &>> "$LOG_DIR/webhook.$TODAY.log"
     } &
     {
