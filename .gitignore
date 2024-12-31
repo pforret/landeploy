@@ -1,9 +1,9 @@
-log
-.tmp
+*.env
 *.tmp
+*.yaml
 .env
 .idea
-vendor
-/gh_localdeploy.yaml
+.tmp
 /redeploy.sh
-*.env
+log
+vendor
