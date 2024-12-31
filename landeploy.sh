@@ -62,7 +62,7 @@ function Script:main() {
     ;;
 
   serve)
-    #TIP: use «$script_prefix serve» to ...
+    #TIP: use «$script_prefix serve» to start local webhook server and remote tunnel
     #TIP:> $script_prefix serve
     # start local webhook server on port $PORT
     check_webhook
@@ -88,20 +88,16 @@ function Script:main() {
       webhook -hooks "$HOOKS" -port "$PORT" -verbose &>> "$LOG_DIR/webhook.$TODAY.log"
     } &
     {
+      local project_name description
+      project_name="$(git config remote.origin.url)"
+      description="$script_prefix: $project_name on $HOSTNAME"
       if [[ -n "$DOMAIN" ]] ; then
-        ngrok http "http://localhost:$PORT" --url="$DOMAIN" &>> "$LOG_DIR/ngrok.$TODAY.log"
+        ngrok http "http://localhost:$PORT" --description="$description" --log=stdout --url="$DOMAIN" &>> "$LOG_DIR/ngrok.$TODAY.log"
       else
-        ngrok http "http://localhost:$PORT" &>> "$LOG_DIR/ngrok.$TODAY.log"
+        ngrok http "http://localhost:$PORT" --description="$description" --log=stdout                 &>> "$LOG_DIR/ngrok.$TODAY.log"
       fi
     } &
     wait
-    ;;
-
-  action3)
-    #TIP: use «$script_prefix action3» to ...
-    #TIP:> $script_prefix action3
-    # Os:require "convert" "imagemagick"
-    # CONVERT $input $output
     ;;
 
   check | env)

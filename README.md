@@ -13,35 +13,37 @@ automatic deploy on LAN/localhost upon `github push`, using ngrok and webhook
 ## 🔥 Usage
 
 ```
-Program : gh_localdeploy  by peter@forret.com
-Version : v0.0.2 (2024-12-30 16:49)
+Program : landeploy  by peter@forret.com
+Version : v0.1.0 (2024-12-31 13:27)
 Purpose : automatic deploy on LAN/localhost upon 'github push'
-Usage   : gh_localdeploy [-h] [-Q] [-V] [-f] [-L <LOG_DIR>] [-T <TMP_DIR>] [-P <PORT>] [-H <HOOKS>] <action> <input?>
+Usage   : landeploy [-h] [-Q] [-V] [-f] [-L <LOG_DIR>] [-T <TMP_DIR>] [-B <BRANCH>] [-D <DOMAIN>] [-E <ENVIRONMENT>] [-H <HOOKS>] [-P <PORT>] [-R <REMOTE>] [-Y <REDEPLOY>] <action>
 Flags, options and parameters:
     -h|--help        : [flag] show usage [default: off]
     -Q|--QUIET       : [flag] no output [default: off]
     -V|--VERBOSE     : [flag] also show debug messages [default: off]
     -f|--FORCE       : [flag] do not ask for confirmation (always yes) [default: off]
-    -L|--LOG_DIR <?> : [option] folder for log files   [default: /home/pforret/log/gh_localdeploy]
-    -T|--TMP_DIR <?> : [option] folder for temp files  [default: /tmp/gh_localdeploy]
-    -P|--PORT <?>    : [option] deployment server will run on local port  [default: 8008]
-    -H|--HOOKS <?>   : [option] webhook config file  [default: ./gh_localdeploy.yaml]
+    -L|--LOG_DIR <?> : [option] folder for log files   [default: log/landeploy]
+    -T|--TMP_DIR <?> : [option] folder for temp files  [default: .tmp]
+    -B|--BRANCH <?>  : [option] remote repo branch  [default: main]
+    -D|--DOMAIN <?>  : [option] ngrok domain to use (from https://dashboard.ngrok.com/domains)
+    -E|--ENVIRONMENT <?>: [option] deployment type (only php for now)  [default: php]
+    -H|--HOOKS <?>   : [option] webhook config file  [default: landeploy.yaml]
+    -P|--PORT <?>    : [option] local port for ngrok service  [default: 8008]
+    -R|--REMOTE <?>  : [option] remote repo name  [default: origin]
+    -Y|--REDEPLOY <?>: [option] deploy script file  [default: redeploy.sh]
     <action>         : [choice] action to perform  [options: init,serve,check,env,update]
-    <input>          : [parameter] input file/text (optional)
                                                                                                                                                                                                                                                                                                                                                                  
 ### TIPS & EXAMPLES
-* use gh_localdeploy init to help and check the installation dependent tools
-  gh_localdeploy init
-* use gh_localdeploy serve to ...
-  gh_localdeploy serve
-* use gh_localdeploy action3 to ...
-  gh_localdeploy action3
-* use gh_localdeploy check to check if this script is ready to execute and what values the options/flags are
-  gh_localdeploy check
-* use gh_localdeploy env to generate an example .env file
-  gh_localdeploy env > .env
-* use gh_localdeploy update to update to the latest version
-  gh_localdeploy update
+* use landeploy init to do/check the installation of ngrok and webhook
+  landeploy init
+* use landeploy serve to start local webhook server and remote tunnel
+  landeploy serve
+* use landeploy check to check if this script is ready to execute and what values the options/flags are
+  landeploy check
+* use landeploy env to generate an example .env file
+  landeploy env > .env
+* use landeploy update to update to the latest version
+  landeploy update
 * >>> bash script created with pforret/bashew
 * >>> for bash development, also check out pforret/setver and pforret/progressbar
 ```
