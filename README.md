@@ -67,8 +67,9 @@ Flags, options and parameters:
 > landeploy serve
 # start local webhook and remote ngrok tunnel
 ⏳  Starting webhook server on port 8008
+Log   : log/landeploy/serve.2025-01-01.log
 Local : http://localhost:8008/hooks/redeploy
-Remote: https://[customdomain].ngrok-free.app/hooks/redeploy (use this as webhook in GitHub/BitBucket)
+Remote: https://[custom].ngrok-free.app/hooks/redeploy (use this as webhook in GitHub/BitBucket)
 Admin : http://localhost:4040 (use this to check what is received by ngrok)
 ```
 

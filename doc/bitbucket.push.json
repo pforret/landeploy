@@ -1,0 +1,366 @@
+{
+  "push": {
+    "changes": [
+      {
+        "old": {
+          "name": "stage",
+          "target": {
+            "type": "commit",
+            "hash": "(...)",
+            "date": "2025-01-01T20:38:32+00:00",
+            "author": {
+              "type": "author",
+              "raw": "Your Name <you@email.com>",
+              "user": {
+                "display_name": "Your Name",
+                "links": {
+                  "self": {
+                    "href": "https://api.bitbucket.org/2.0/users/[user-id]"
+                  },
+                  "avatar": {
+                    "href": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/..."
+                  },
+                  "html": {
+                    "href": "https://bitbucket.org/[user-id]/"
+                  }
+                },
+                "type": "user",
+                "uuid": "{[uuid]}",
+                "account_id": "[account-id]",
+                "nickname": "acronym"
+              }
+            },
+            "message": "routes.txt edited online with Bitbucket",
+            "summary": {
+              "type": "rendered",
+              "raw": "routes.txt edited online with Bitbucket",
+              "markup": "markdown",
+              "html": "<p>routes.txt edited online with Bitbucket</p>"
+            },
+            "links": {
+              "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/company/project/commit/[newhash]"
+              },
+              "html": {
+                "href": "https://bitbucket.org/company/project/commits/[newhash]"
+              }
+            },
+            "parents": [
+              {
+                "hash": "b0643e5789179b3bbf7f160ae16ba9eeb000a255",
+                "links": {
+                  "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/company/project/commit/b0643e5789179b3bbf7f160ae16ba9eeb000a255"
+                  },
+                  "html": {
+                    "href": "https://bitbucket.org/company/project/commits/b0643e5789179b3bbf7f160ae16ba9eeb000a255"
+                  }
+                },
+                "type": "commit"
+              }
+            ],
+            "rendered": {},
+            "properties": {}
+          },
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/company/project/refs/branches/stage"
+            },
+            "commits": {
+              "href": "https://api.bitbucket.org/2.0/repositories/company/project/commits/stage"
+            },
+            "html": {
+              "href": "https://bitbucket.org/company/project/branch/stage"
+            },
+            "pullrequest_create": {
+              "href": "https://bitbucket.org/company/project/pull-requests/new?source=stage&t=1"
+            }
+          },
+          "type": "branch",
+          "merge_strategies": [
+            "merge_commit",
+            "squash",
+            "fast_forward",
+            "squash_fast_forward",
+            "rebase_fast_forward",
+            "rebase_merge"
+          ],
+          "sync_strategies": [
+            "merge_commit",
+            "rebase"
+          ],
+          "default_merge_strategy": "merge_commit"
+        },
+        "new": {
+          "name": "stage",
+          "target": {
+            "type": "commit",
+            "hash": "newhash",
+            "date": "2025-01-01T21:19:22+00:00",
+            "author": {
+              "type": "author",
+              "raw": "Your Name <you@email.com>",
+              "user": {
+                "display_name": "Your Name",
+                "links": {
+                  "self": {
+                    "href": "https://api.bitbucket.org/2.0/users/[user-id]"
+                  },
+                  "avatar": {
+                    "href": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/..."
+                  },
+                  "html": {
+                    "href": "https://bitbucket.org/[user-id]/"
+                  }
+                },
+                "type": "user",
+                "uuid": "{[uuid]}",
+                "account_id": "[account-id]",
+                "nickname": "acronym"
+              }
+            },
+            "message": "README.md edited online with Bitbucket",
+            "summary": {
+              "type": "rendered",
+              "raw": "README.md edited online with Bitbucket",
+              "markup": "markdown",
+              "html": "<p>README.md edited online with Bitbucket</p>"
+            },
+            "links": {
+              "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/company/project/commit/newhash"
+              },
+              "html": {
+                "href": "https://bitbucket.org/company/project/commits/newhash"
+              }
+            },
+            "parents": [
+              {
+                "hash": "[newhash]",
+                "links": {
+                  "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/company/project/commit/[newhash]"
+                  },
+                  "html": {
+                    "href": "https://bitbucket.org/company/project/commits/[newhash]"
+                  }
+                },
+                "type": "commit"
+              }
+            ],
+            "rendered": {},
+            "properties": {}
+          },
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/company/project/refs/branches/stage"
+            },
+            "commits": {
+              "href": "https://api.bitbucket.org/2.0/repositories/company/project/commits/stage"
+            },
+            "html": {
+              "href": "https://bitbucket.org/company/project/branch/stage"
+            },
+            "pullrequest_create": {
+              "href": "https://bitbucket.org/company/project/pull-requests/new?source=stage&t=1"
+            }
+          },
+          "type": "branch",
+          "merge_strategies": [
+            "merge_commit",
+            "squash",
+            "fast_forward",
+            "squash_fast_forward",
+            "rebase_fast_forward",
+            "rebase_merge"
+          ],
+          "sync_strategies": [
+            "merge_commit",
+            "rebase"
+          ],
+          "default_merge_strategy": "merge_commit"
+        },
+        "truncated": false,
+        "created": false,
+        "forced": false,
+        "closed": false,
+        "links": {
+          "commits": {
+            "href": "https://api.bitbucket.org/2.0/repositories/company/project/commits?include=newhash&exclude=[newhash]"
+          },
+          "diff": {
+            "href": "https://api.bitbucket.org/2.0/repositories/company/project/diff/newhash..[newhash]"
+          },
+          "html": {
+            "href": "https://bitbucket.org/company/project/branches/compare/newhash..[newhash]"
+          }
+        },
+        "commits": [
+          {
+            "type": "commit",
+            "hash": "newhash",
+            "date": "2025-01-01T21:19:22+00:00",
+            "author": {
+              "type": "author",
+              "raw": "Your Name <you@email.com>",
+              "user": {
+                "display_name": "Your Name",
+                "links": {
+                  "self": {
+                    "href": "https://api.bitbucket.org/2.0/users/[user-id]"
+                  },
+                  "avatar": {
+                    "href": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/[account-id]/46cfbb2e-6a60-4a38-9ad6-a292472b5eb4/128"
+                  },
+                  "html": {
+                    "href": "https://bitbucket.org/[user-id]/"
+                  }
+                },
+                "type": "user",
+                "uuid": "{[uuid]}",
+                "account_id": "[account-id]",
+                "nickname": "acronym"
+              }
+            },
+            "message": "README.md edited online with Bitbucket",
+            "summary": {
+              "type": "rendered",
+              "raw": "README.md edited online with Bitbucket",
+              "markup": "markdown",
+              "html": "<p>README.md edited online with Bitbucket</p>"
+            },
+            "links": {
+              "self": {
+                "href": "https://api.bitbucket.org/2.0/repositories/company/project/commit/newhash"
+              },
+              "html": {
+                "href": "https://bitbucket.org/company/project/commits/newhash"
+              },
+              "diff": {
+                "href": "https://api.bitbucket.org/2.0/repositories/company/project/diff/newhash"
+              },
+              "approve": {
+                "href": "https://api.bitbucket.org/2.0/repositories/company/project/commit/newhash/approve"
+              },
+              "comments": {
+                "href": "https://api.bitbucket.org/2.0/repositories/company/project/commit/newhash/comments"
+              },
+              "statuses": {
+                "href": "https://api.bitbucket.org/2.0/repositories/company/project/commit/newhash/statuses"
+              },
+              "patch": {
+                "href": "https://api.bitbucket.org/2.0/repositories/company/project/patch/newhash"
+              }
+            },
+            "parents": [
+              {
+                "hash": "[newhash]",
+                "links": {
+                  "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/company/project/commit/[newhash]"
+                  },
+                  "html": {
+                    "href": "https://bitbucket.org/company/project/commits/[newhash]"
+                  }
+                },
+                "type": "commit"
+              }
+            ],
+            "rendered": {},
+            "properties": {}
+          }
+        ]
+      }
+    ]
+  },
+  "repository": {
+    "type": "repository",
+    "full_name": "company/project",
+    "links": {
+      "self": {
+        "href": "https://api.bitbucket.org/2.0/repositories/company/project"
+      },
+      "html": {
+        "href": "https://bitbucket.org/company/project"
+      },
+      "avatar": {
+        "href": "https://bytebucket.org/ravatar/...?ts=2977207"
+      }
+    },
+    "name": "project",
+    "scm": "git",
+    "website": null,
+    "owner": {
+      "display_name": "Company",
+      "links": {
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/workspaces/[workplace-id]"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/account/company/avatar/"
+        },
+        "html": {
+          "href": "https://bitbucket.org/[workplace-id]/"
+        }
+      },
+      "type": "team",
+      "uuid": "{[uuid]}",
+      "username": "company"
+    },
+    "workspace": {
+      "type": "workspace",
+      "uuid": "{[uuid]}",
+      "name": "Company",
+      "slug": "company",
+      "links": {
+        "avatar": {
+          "href": "https://bitbucket.org/workspaces/company/avatar/?ts=1717061671"
+        },
+        "html": {
+          "href": "https://bitbucket.org/company/"
+        },
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/workspaces/company"
+        }
+      }
+    },
+    "is_private": true,
+    "project": {
+      "type": "project",
+      "key": "BF_COR",
+      "uuid": "{d966f5dd-b4df-45ef-a3ca-4d5e7670eed4}",
+      "name": "Company Corporate",
+      "links": {
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/workspaces/company/projects/BF_COR"
+        },
+        "html": {
+          "href": "https://bitbucket.org/company/workspace/projects/BF_COR"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/company/workspace/projects/BF_COR/avatar/32?ts=1592395856"
+        }
+      }
+    },
+    "uuid": "{beca42fd-ebf1-40df-952f-5fec0630c7e1}",
+    "parent": null
+  },
+  "actor": {
+    "display_name": "Your Name",
+    "links": {
+      "self": {
+        "href": "https://api.bitbucket.org/2.0/users/[user-id]"
+      },
+      "avatar": {
+        "href": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/[account-id]/46cfbb2e-6a60-4a38-9ad6-a292472b5eb4/128"
+      },
+      "html": {
+        "href": "https://bitbucket.org/[user-id]/"
+      }
+    },
+    "type": "user",
+    "uuid": "{[uuid]}",
+    "account_id": "[account-id]",
+    "nickname": "acronym"
+  }
+}
