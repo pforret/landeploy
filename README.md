@@ -8,13 +8,13 @@
 
 # landeploy
 
-automatic deploy on LAN/localhost upon `github push`, using ngrok and webhook
+automatic deploy on LAN/localhost upon `github/bitbucket push`, using ngrok and webhook
 
 ## 🔥 Usage
 
 ```
 Program : landeploy  by peter@forret.com
-Version : v0.1.0 (2024-12-31 13:27)
+Version : v0.1.4 (2025-01-01 22:16)
 Purpose : automatic deploy on LAN/localhost upon 'github push'
 Usage   : landeploy [-h] [-Q] [-V] [-f] [-L <LOG_DIR>] [-T <TMP_DIR>] [-B <BRANCH>] [-D <DOMAIN>] [-E <ENVIRONMENT>] [-H <HOOKS>] [-P <PORT>] [-R <REMOTE>] [-Y <REDEPLOY>] <action>
 Flags, options and parameters:
@@ -25,7 +25,7 @@ Flags, options and parameters:
     -L|--LOG_DIR <?> : [option] folder for log files   [default: log/landeploy]
     -T|--TMP_DIR <?> : [option] folder for temp files  [default: .tmp]
     -B|--BRANCH <?>  : [option] remote repo branch  [default: main]
-    -D|--DOMAIN <?>  : [option] ngrok domain to use (from https://dashboard.ngrok.com/domains)
+    -D|--DOMAIN <?>  : [option] ngrok domain to use
     -E|--ENVIRONMENT <?>: [option] deployment type (only php for now)  [default: php]
     -H|--HOOKS <?>   : [option] webhook config file  [default: landeploy.yaml]
     -P|--PORT <?>    : [option] local port for ngrok service  [default: 8008]
