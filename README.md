@@ -14,7 +14,7 @@ automatic deploy on LAN/localhost upon `github/bitbucket push`, using ngrok and 
 
 ```
 Program : landeploy  by peter@forret.com
-Version : v0.1.4 (2025-01-01 22:16)
+Version : v1.0.0 (2025-01-01 22:16)
 Purpose : automatic deploy on LAN/localhost upon 'github push'
 Usage   : landeploy [-h] [-Q] [-V] [-f] [-L <LOG_DIR>] [-T <TMP_DIR>] [-B <BRANCH>] [-D <DOMAIN>] [-E <ENVIRONMENT>] [-H <HOOKS>] [-P <PORT>] [-R <REMOTE>] [-Y <REDEPLOY>] <action>
 Flags, options and parameters:
