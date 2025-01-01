@@ -10,7 +10,17 @@
 
 ![](assets/logo.jpg)
 
-automatic deploy on LAN/localhost upon `github/bitbucket push`, using ngrok and webhook
+This script will help you if you need to set up Continuous Deployment on a local/LAN server without a public IP address and/or website.
+
+It will
+
+* install [ngrok](https://ngrok.com/) (`landeploy --FORCE init`)
+* install [webhook](https://github.com/adnanh/webhook) (`landeploy --FORCE init`)
+* set up the ngrok config (you will need to create a free account on [ngrok.com](https://ngrok.com/))
+* set up the webhook config (`landeploy --FORCE init`)
+* set up the `redeploy` script (`landeploy --FORCE init`)
+* run the webhook server and ngrok tunnel (`landeploy serve`)
+* give you the URL to use as webhook in your GitHub/BitBucket repository (`landeploy serve`)
 
 ## 🔥 Usage
 
@@ -59,7 +69,7 @@ Flags, options and parameters:
 > landeploy init
 # check if ngrok, webhook and all config files are OK
 ✅  Found binary: /usr/local/bin/ngrok                                                                                                                                                                                                                                                                                                                           
-✅  Found config: Valid configuration file at /home/pforret/.config/ngrok/ngrok.yml
+✅  Found config: Valid configuration file at $HOME/.config/ngrok/ngrok.yml
 ✅  Found binary: /usr/bin/webhook
 ✅  Found config: landeploy.yaml
 ✅  Found config: redeploy.sh
