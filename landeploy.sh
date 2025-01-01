@@ -74,6 +74,9 @@ function Script:main() {
 
     IO:announce "Starting webhook server on port $PORT"
     local name
+    TODAY=$(date '+%Y-%m-%d')
+    local LOG_FILE="$LOG_DIR/serve.$TODAY.log"
+    IO:print "Log   : $LOG_FILE"
     < "$HOOKS" grep "id:" \
     | cut -d: -f2 \
     | xargs \
@@ -82,9 +85,6 @@ function Script:main() {
         [[ -n "$DOMAIN" ]] && IO:print "Remote: https://$DOMAIN/hooks/$name (use this as webhook in GitHub/BitBucket)"
       done
     local TODAY
-    TODAY=$(date '+%Y-%m-%d')
-    local LOG_FILE="$LOG_DIR/serve.$TODAY.log"
-    IO:print "Log   : $LOG_FILE"
     echo "##### START webhook on port $PORT @ $(date)" >> "$LOG_FILE"
     IO:log "##### START webhook on port $PORT"
     {
