@@ -187,6 +187,7 @@ function create_redeploy_script() {
   # shellcheck disable=SC2153
   echo "{"
   echo "  echo \"##### git pull @ \$(date)\""
+  # shellcheck disable=SC2153
   echo "  git pull '$REMOTE' '$BRANCH'"
   echo "} &>> \"\$LOGFILE\""
   echo " "
