@@ -8,6 +8,8 @@
 
 # landeploy
 
+![](assets/logo.jpg)
+
 automatic deploy on LAN/localhost upon `github/bitbucket push`, using ngrok and webhook
 
 ## 🔥 Usage
