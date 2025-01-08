@@ -103,7 +103,7 @@ function Script:main() {
       description="$script_prefix: $project_name on $HOSTNAME"
       if [[ "$TUNNEL" == "cloudflare" ]] ; then
         [[ -z "$DOMAIN" ]] && IO:die "when working with cloudflared, you need to specify the --DOMAIN <domain> parameter"
-        cf_credentials=$(find $HOME/.cloudflared/ -name '*.json'  | tail -1)
+        cf_credentials=$(find "$HOME/.cloudflared/" -name '*.json'  | tail -1)
         cf_tunnelid=$(basename "$cf_credentials" .json)
         echo "##### START cloudflared on $DOMAIN @ $(date)" >> "$LOG_FILE"
         IO:log "##### START cloudflared on $DOMAIN"
@@ -175,21 +175,21 @@ function check_cloudflare() {
   fi
   [[ -n "$verbose" ]] && IO:success "Found binary: $(command -v cloudflared)"
 
-  ls $HOME/.cloudflared/*.json > /dev/null || IO:die "first run 'cloudflared tunnel login'"
-  cf_credentials=$(find $HOME/.cloudflared/ -name '*.json'  | tail -1)
+  ls "$HOME/.cloudflared/*.json" > /dev/null || IO:die "first run 'cloudflared tunnel login'"
+  cf_credentials=$(find "$HOME/.cloudflared/" -name '*.json'  | tail -1)
   cf_tunnelid=$(basename "$cf_credentials" .json)
   [[ -n "$verbose" ]] && IO:success "Found config: $cf_tunnelid"
 
   cloudflared tunnel list > /dev/null || IO:die "first run 'cloudflared tunnel create <name>'"
-  cf_tunnelname=$(cloudflared tunnel list | grep $cf_tunnelid | awk '{print $2}')
+  cf_tunnelname=$(cloudflared tunnel list | grep "$cf_tunnelid" | awk '{print $2}')
   [[ -n "$verbose" ]] && IO:success "Found tunnel: $cf_tunnelname"
 
-  if [[ ! -f $HOME/.cloudflared/config.yml ]] ; then
+  if [[ ! -f "$HOME/.cloudflared/config.yml" ]] ; then
     {
       echo "url: http://localhost:$PORT"
       echo "tunnel: $cf_tunnelid"
       echo "credentials-file: $cf_credentials"
-    } > $HOME/.cloudflared/config.yml
+    } > "$HOME/.cloudflared/config.yml"
   fi
 
 }
