@@ -5,7 +5,7 @@ script_version="0.0.1" # if there is a VERSION.md in this script's folder, that 
 readonly script_author="peter@forret.com"
 readonly script_created="2024-12-30"
 readonly run_as_root=-1 # run_as_root: 0 = don't check anything / 1 = script MUST run as root / -1 = script MAY NOT run as root
-readonly script_description="automatic deploy on LAN/localhost upon 'github push'"
+readonly script_description="automatic deploy on LAN/localhost upon 'git push'"
 
 function Option:config() {
   grep <<<"
@@ -14,14 +14,15 @@ flag|h|help|show usage
 flag|Q|QUIET|no output
 flag|V|VERBOSE|also show debug messages
 flag|f|FORCE|do not ask for confirmation (always yes)
-option|L|LOG_DIR|folder for log files |log/$script_prefix
-option|T|TMP_DIR|folder for temp files|.tmp
 option|B|BRANCH|remote repo branch|main
 option|D|DOMAIN|ngrok domain to use|
 option|E|ENVIRONMENT|deployment type (only php for now)|php
 option|H|HOOKS|webhook config file|$script_prefix.yaml
+option|L|LOG_DIR|folder for log files |log/$script_prefix
 option|P|PORT|local port for ngrok service|8008
 option|R|REMOTE|remote repo name|origin
+option|T|TMP_DIR|folder for temp files|.tmp
+option|U|TUNNEL|tunnel provider: ngrok/cloudflare|ngrok
 option|Y|REDEPLOY|deploy script file|redeploy.sh
 choice|1|action|action to perform|init,serve,check,env,update
 #param|?|input|input file/text
@@ -42,7 +43,11 @@ function Script:main() {
     #TIP: use «$script_prefix init» to do/check the installation of ngrok and webhook
     #TIP:> $script_prefix init
     Os:require git
-    check_ngrok 1
+    if [[ "$TUNNEL" == "cloudflare" ]] ; then
+      check_cloudflare 1
+    else
+      check_ngrok 1
+    fi
     check_webhook 1
 
     if [[ ! -f "$HOOKS" ]] ; then
@@ -96,14 +101,24 @@ function Script:main() {
       local project_name description
       project_name="$(git config remote.origin.url)"
       description="$script_prefix: $project_name on $HOSTNAME"
-      if [[ -n "$DOMAIN" ]] ; then
-        echo "##### START ngrok on $DOMAIN @ $(date)" >> "$LOG_FILE"
-        IO:log "##### START ngrok on $DOMAIN"
-        ngrok http "http://localhost:$PORT" --description="$description" --log=stdout --url="$DOMAIN" &>> "$LOG_FILE"
+      if [[ "$TUNNEL" == "cloudflare" ]] ; then
+        [[ -z "$DOMAIN" ]] && IO:die "when working with cloudflared, you need to specify the --DOMAIN <domain> parameter"
+        cf_credentials=$(find $HOME/.cloudflared/ -name '*.json'  | tail -1)
+        cf_tunnelid=$(basename "$cf_credentials" .json)
+        echo "##### START cloudflared on $DOMAIN @ $(date)" >> "$LOG_FILE"
+        IO:log "##### START cloudflared on $DOMAIN"
+        cloudflared tunnel route dns "$cf_tunnelid" "$DOMAIN" &>> "$LOG_FILE"
+        cloudflared tunnel run "$cf_tunnelid" &>> "$LOG_FILE"
       else
-        echo "##### START ngrok @ $(date)" >> "$LOG_FILE"
-        IO:log "##### START ngrok"
-        ngrok http "http://localhost:$PORT" --description="$description" --log=stdout                 &>> "$LOG_FILE"
+        if [[ -n "$DOMAIN" ]] ; then
+          echo "##### START ngrok on $DOMAIN @ $(date)" >> "$LOG_FILE"
+          IO:log "##### START ngrok on $DOMAIN"
+          ngrok http "http://localhost:$PORT" --description="$description" --log=stdout --url="$DOMAIN" &>> "$LOG_FILE"
+        else
+          echo "##### START ngrok @ $(date)" >> "$LOG_FILE"
+          IO:log "##### START ngrok"
+          ngrok http "http://localhost:$PORT" --description="$description" --log=stdout                 &>> "$LOG_FILE"
+        fi
       fi
     } &
     wait
@@ -150,6 +165,35 @@ function check_ngrok() {
   [[ -n "$verbose" ]] && IO:success "Found config: $(ngrok config check)"
 }
 
+function check_cloudflare() {
+  # https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/create-local-tunnel/
+  local verbose=${1:-}
+  [[ -n "$verbose" ]] && IO:progress "check if 'cloudflared' is installed"
+  if [[ -z $(command -v cloudflared) ]] ; then
+    [[ "$FORCE" -lt 1 ]] && IO:die "cloudflared is not installed - use --FORCE to install it automatically"
+    install_cloudflare
+  fi
+  [[ -n "$verbose" ]] && IO:success "Found binary: $(command -v cloudflared)"
+
+  ls $HOME/.cloudflared/*.json > /dev/null || IO:die "first run 'cloudflared tunnel login'"
+  cf_credentials=$(find $HOME/.cloudflared/ -name '*.json'  | tail -1)
+  cf_tunnelid=$(basename "$cf_credentials" .json)
+  [[ -n "$verbose" ]] && IO:success "Found config: $cf_tunnelid"
+
+  cloudflared tunnel list > /dev/null || IO:die "first run 'cloudflared tunnel create <name>'"
+  cf_tunnelname=$(cloudflared tunnel list | grep $cf_tunnelid | awk '{print $2}')
+  [[ -n "$verbose" ]] && IO:success "Found tunnel: $cf_tunnelname"
+
+  if [[ ! -f $HOME/.cloudflared/config.yml ]] ; then
+    {
+      echo "url: http://localhost:$PORT"
+      echo "tunnel: $cf_tunnelid"
+      echo "credentials-file: $cf_credentials"
+    } > $HOME/.cloudflared/config.yml
+  fi
+
+}
+
 function check_webhook() {
   local verbose=${1:-}
   [[ -n "$verbose" ]] && IO:progress "check if webhook is installed"
@@ -167,6 +211,16 @@ function install_ngrok() {
   && sudo apt update \
   && sudo apt install ngrok
   [[ -z $(command -v ngrok) ]] && IO:die "Follow instructions on https://dashboard.ngrok.com/get-started/setup/linux to install ngrok - automatic install didn't work"
+}
+
+function install_cloudflare() {
+  IO:announce "Installing cloudflared for Linux; you will need to give a sudo password"
+  sudo mkdir -p --mode=0755 /usr/share/keyrings
+  curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null \
+  && echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflared.list \
+  && sudo apt update \
+  && sudo apt install cloudflared
+  [[ -z $(command -v cloudflared) ]] && IO:die "Follow instructions on https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/create-local-tunnel/ to install cloudflared - automatic install didn't work"
 }
 
 function install_webhook() {
