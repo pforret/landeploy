@@ -14,34 +14,35 @@ This script will help you if you need to set up Continuous Deployment on a local
 
 It will
 
-* install [ngrok](https://ngrok.com/) (`landeploy --FORCE init`)
+* install [ngrok](https://ngrok.com/) (`landeploy --FORCE init`) or [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel) (`landeploy --TUNNEL cloudflare --FORCE init`)
 * install [webhook](https://github.com/adnanh/webhook) (`landeploy --FORCE init`)
-* set up the ngrok config (you will need to create a free account on [ngrok.com](https://ngrok.com/))
+* set up the ngrok/cloudflared config (you will need to create a free account on [ngrok.com](https://ngrok.com/) or [dash.cloudflare.com](https://dash.cloudflare.com/))
 * set up the webhook config (`landeploy --FORCE init`)
 * set up the `redeploy` script (`landeploy --FORCE init`)
-* run the webhook server and ngrok tunnel (`landeploy serve`)
+* run the webhook server and ngrok/cloudflared tunnel (`landeploy serve`)
 * give you the URL to use as webhook in your GitHub/BitBucket repository (`landeploy serve`)
 
 ## 🔥 Usage
 
 ```
 Program : landeploy  by peter@forret.com
-Version : v1.0.0 (2025-01-01 22:16)
-Purpose : automatic deploy on LAN/localhost upon 'github push'
-Usage   : landeploy [-h] [-Q] [-V] [-f] [-L <LOG_DIR>] [-T <TMP_DIR>] [-B <BRANCH>] [-D <DOMAIN>] [-E <ENVIRONMENT>] [-H <HOOKS>] [-P <PORT>] [-R <REMOTE>] [-Y <REDEPLOY>] <action>
+Version : v1.1.0 (2025-01-08 21:27)
+Purpose : automatic deploy on LAN/localhost upon 'git push'
+Usage   : landeploy [-h] [-Q] [-V] [-f] [-B <BRANCH>] [-D <DOMAIN>] [-E <ENVIRONMENT>] [-H <HOOKS>] [-L <LOG_DIR>] [-P <PORT>] [-R <REMOTE>] [-T <TMP_DIR>] [-U <TUNNEL>] [-Y <REDEPLOY>] <action>
 Flags, options and parameters:
     -h|--help        : [flag] show usage [default: off]
     -Q|--QUIET       : [flag] no output [default: off]
     -V|--VERBOSE     : [flag] also show debug messages [default: off]
     -f|--FORCE       : [flag] do not ask for confirmation (always yes) [default: off]
-    -L|--LOG_DIR <?> : [option] folder for log files   [default: log/landeploy]
-    -T|--TMP_DIR <?> : [option] folder for temp files  [default: .tmp]
     -B|--BRANCH <?>  : [option] remote repo branch  [default: main]
     -D|--DOMAIN <?>  : [option] ngrok domain to use
     -E|--ENVIRONMENT <?>: [option] deployment type (only php for now)  [default: php]
     -H|--HOOKS <?>   : [option] webhook config file  [default: landeploy.yaml]
+    -L|--LOG_DIR <?> : [option] folder for log files   [default: log/landeploy]
     -P|--PORT <?>    : [option] local port for ngrok service  [default: 8008]
     -R|--REMOTE <?>  : [option] remote repo name  [default: origin]
+    -T|--TMP_DIR <?> : [option] folder for temp files  [default: .tmp]
+    -U|--TUNNEL <?>  : [option] tunnel provider: ngrok/cloudflare  [default: ngrok]
     -Y|--REDEPLOY <?>: [option] deploy script file  [default: redeploy.sh]
     <action>         : [choice] action to perform  [options: init,serve,check,env,update]
                                                                                                                                                                                                                                                                                                                                                                  
