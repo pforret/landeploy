@@ -93,7 +93,7 @@ function Script:main() {
     echo "##### START webhook on port $PORT @ $(date)" >> "$LOG_FILE"
     IO:log "##### START webhook on port $PORT"
     {
-      IO:print "Admin : http://localhost:4040 (use this to check what is received by ngrok)"
+      [[ "$TUNNEL" == "ngrok" ]] && IO:print "Admin : http://localhost:4040 (use this to check what is received by ngrok)"
       webhook -hooks "$HOOKS" -port "$PORT" -verbose &>> "$LOG_FILE"
     } &
     sleep 1
